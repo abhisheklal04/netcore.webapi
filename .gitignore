@@ -11,4 +11,5 @@ packages
 .flutter-plugins
 */bin
 */obj
+*/Logs
 .vs
