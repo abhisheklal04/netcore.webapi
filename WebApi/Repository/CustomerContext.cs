@@ -51,6 +51,12 @@ namespace WebApi.Repository
                 entity.Property(e => e.DateOfBirth)
                     .HasColumnType("date");
 
+                entity.Property(e => e.UpdatedDateTimeUtc)
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedDateTimeUtc)
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.IsArchived).HasColumnType("bit(1)");
             });
 
