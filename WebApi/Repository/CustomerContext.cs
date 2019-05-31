@@ -49,7 +49,7 @@ namespace WebApi.Repository
                     .HasMaxLength(50);
 
                 entity.Property(e => e.DateOfBirth)
-                    .HasColumnType("datetime");
+                    .HasColumnType("date");
 
                 entity.Property(e => e.IsArchived).HasColumnType("bit(1)");
             });

@@ -17,7 +17,7 @@ namespace WebApi
                 Id = new Guid(),
                 FirstName = "John",
                 LastName = "Smith",
-                DateOfBirth = DateTime.Now,
+                DateOfBirth = DateTimeHelper.ParseIsoDate("1985-02-10"),
                 CreatedDateTimeUtc = DateTime.UtcNow,
                 UpdatedDateTimeUtc = DateTime.UtcNow,
                 IsArchived = false
@@ -28,7 +28,7 @@ namespace WebApi
                 Id = new Guid(),
                 FirstName = "Prince",
                 LastName = "Wales",
-                DateOfBirth = DateTime.Now,
+                DateOfBirth = DateTimeHelper.ParseIsoDate("1990-07-11"),
                 CreatedDateTimeUtc = DateTime.UtcNow,
                 UpdatedDateTimeUtc = DateTime.UtcNow,
                 IsArchived = false
@@ -39,7 +39,7 @@ namespace WebApi
                 Id = new Guid(),
                 FirstName = "Robert",
                 LastName = "Smith",
-                DateOfBirth = DateTime.Now,
+                DateOfBirth = DateTimeHelper.ParseIsoDate("1980-01-01"),
                 CreatedDateTimeUtc = DateTime.UtcNow,
                 UpdatedDateTimeUtc = DateTime.UtcNow,
                 IsArchived = false

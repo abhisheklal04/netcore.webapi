@@ -72,9 +72,9 @@ namespace WebApi.Services
                 throw new NotFoundException("Customer not found.");
 
             dbItem.UpdatedDateTimeUtc = DateTime.UtcNow;
-            dbItem.FirstName = dbItem.FirstName;
-            dbItem.LastName = dbItem.LastName;
-            dbItem.DateOfBirth = dbItem.DateOfBirth;
+            dbItem.FirstName = model.FirstName;
+            dbItem.LastName = model.LastName;
+            dbItem.DateOfBirth = model.DateOfBirth;
 
             _dbContext.Customers.Update(dbItem);
             _dbContext.SaveChanges();
