@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  webapi:
+    image: roadhouse.yodiz.api
+    build:
+      context: .
+      dockerfile: Dockerfile
