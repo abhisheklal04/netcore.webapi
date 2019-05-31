@@ -4,7 +4,7 @@ WORKDIR /app
 # copy csproj and restore as distinct layers
 COPY *.sln .
 COPY WebApi/*.csproj WebApi/
-COPY Services/*.csproj Services/
+
 RUN dotnet restore
 
 # copy everything else and build app
