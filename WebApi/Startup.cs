@@ -19,12 +19,15 @@ using AutoMapper;
 using WebApi.Repository;
 using WebApi.Common;
 using WebApi.Services;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Diagnostics;
 
 namespace WebApi
 {
     public class Startup
     {
-        
+        public static bool EnableEFLogger = false;
+
         public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             Configuration = configuration;
@@ -37,8 +40,10 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            Startup.EnableEFLogger = Configuration.GetValue<bool>("App:EnableEFLogger");
 
             services.AddMemoryCache();
 
@@ -64,7 +69,7 @@ namespace WebApi
 
             services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
             services.AddResponseCompression();
-            services.AddDbContext<CustomDbContext>(options => options.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()));
+            services.AddDbContext<CustomDbContext>();
             services.AddWebEncoders();
             services.AddCors(options =>
             {
@@ -102,12 +107,12 @@ This can be done with a POST to " + @"/login with your app client ID.
             services.AddAutoMapper(typeof(Startup));
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-            services.AddSingleton<CustomerService, CustomerService>();
+            services.AddTransient<CustomerService, CustomerService>();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -128,6 +133,9 @@ This can be done with a POST to " + @"/login with your app client ID.
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.EnableDeepLinking();
             });
+
+            if (Configuration.GetValue<bool>("Debug:SeedData"))
+                SeedDatabase.Run(serviceProvider, Configuration);
         }
     }
 
@@ -204,5 +212,55 @@ This can be done with a POST to " + @"/login with your app client ID.
         }
     }
 
-    
+    public partial class CustomDbContext : CustomerContext
+    {
+        public static readonly InMemoryDatabaseRoot InMemoryDatabaseRoot = new InMemoryDatabaseRoot();
+        public string ConnectionString;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseInMemoryDatabase("InMemoryDb", InMemoryDatabaseRoot);
+                optionsBuilder.EnableSensitiveDataLogging(); // Show detailed error in LINQ breakpoints.
+            }
+            if (Startup.EnableEFLogger)
+            {
+                var lf = new LoggerFactory();
+                lf.AddProvider(new EFLoggerProvider());
+                optionsBuilder.UseLoggerFactory(lf);
+            }
+            else
+                optionsBuilder.UseLoggerFactory(new LoggerFactory());
+        }
+        public class EFLoggerProvider : ILoggerProvider
+        {
+            public ILogger CreateLogger(string categoryName) { return new MyLogger(); }
+            public void Dispose() { }
+            private class MyLogger : ILogger
+            {
+                public bool IsEnabled(LogLevel logLevel) { return true; }
+                private static ConsoleColor _lastColor;
+                public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+                {
+                    if (eventId.Id == 20101) // "Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"
+                    {
+                        _lastColor = _lastColor == ConsoleColor.Yellow ? ConsoleColor.DarkYellow : ConsoleColor.Yellow;
+                        Console.ForegroundColor = _lastColor;
+                        Console.WriteLine(formatter(state, exception));
+                        Console.ResetColor();
+                        Debug.WriteLine(formatter(state, exception));
+                    }
+                }
+                public IDisposable BeginScope<TState>(TState state) { return null; }
+            }
+        }
+        public CustomDbContext(string connectionString) : base()
+        {
+            ConnectionString = connectionString;
+        }
+        public CustomDbContext(DbContextOptions options) : base(options) { }
+    }
+
 }
