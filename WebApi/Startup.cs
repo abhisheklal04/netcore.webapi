@@ -28,13 +28,14 @@ namespace WebApi
     {
         public static bool EnableEFLogger = false;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment, ILogger<Startup> logger)
         {
             Configuration = configuration;
-            HostingEnvironment = hostingEnvironment;
+            HostingEnvironment = hostingEnvironment;            
         }
 
         public IConfiguration Configuration { get; }
+
         public IHostingEnvironment HostingEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -112,8 +113,10 @@ This can be done with a POST to " + @"/login with your app client ID.
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddFile("Logs/mylog-{Date}.txt");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -144,8 +147,16 @@ This can be done with a POST to " + @"/login with your app client ID.
         public CurlLoggerAttribute() : base(typeof(AutoLogActionFilterImpl)) { }
         private class AutoLogActionFilterImpl : IActionFilter
         {
-            public AutoLogActionFilterImpl(ILoggerFactory loggerFactory) { }
-            public void OnActionExecuted(ActionExecutedContext context) { }
+            private readonly ILogger _logger;
+
+            public AutoLogActionFilterImpl(ILogger<CurlLoggerAttribute> logger)
+            {
+                _logger = logger;
+            }
+            public void OnActionExecuted(ActionExecutedContext context)
+            {
+                
+            }
             public void OnActionExecuting(ActionExecutingContext context)
             {
                 var request = context.HttpContext.Request;
@@ -165,6 +176,9 @@ This can be done with a POST to " + @"/login with your app client ID.
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine(curl.ToString());
                 Console.ResetColor();
+
+                _logger.LogInformation("CurlRequest : " + curl.ToString());
+
             }
 
         }
@@ -172,10 +186,12 @@ This can be done with a POST to " + @"/login with your app client ID.
 
     public class ErrorHandlingMiddleware
     {
+        private static ILogger _logger;
         private readonly RequestDelegate next;
-        public ErrorHandlingMiddleware(RequestDelegate next)
+        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
         {
             this.next = next;
+            _logger = logger;
         }
         public async Task Invoke(HttpContext context, IHostingEnvironment env)
         {
@@ -186,9 +202,7 @@ This can be done with a POST to " + @"/login with your app client ID.
             catch (Exception ex)
             {
                 await HandleExceptionAsync(context, ex);
-                if (!env.IsDevelopment()) { }
-                    //ExceptionDispatchInfo.Capture(ex).Throw(); // Send to bugsnag.
-                    // bugsnag.Notify(ex);
+                if (!env.IsDevelopment()) { }                    
             }
         }
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
@@ -199,6 +213,7 @@ This can be done with a POST to " + @"/login with your app client ID.
             else if (exception is Exception) code = HttpStatusCode.BadRequest;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine((exception.Source == nameof(webapi) ? "App Error - " : "Unhandled Error - ") + exception.GetType().Name + ": " + exception.Message);
+            _logger.LogError((exception.Source == nameof(webapi) ? "App Error - " : "Unhandled Error - ") + exception.GetType().Name + ": " + exception.Message);
             Console.ResetColor();
             if (exception.Source != nameof(webapi))
             {
@@ -256,6 +271,7 @@ This can be done with a POST to " + @"/login with your app client ID.
                 public IDisposable BeginScope<TState>(TState state) { return null; }
             }
         }
+
         public CustomDbContext(string connectionString) : base()
         {
             ConnectionString = connectionString;
