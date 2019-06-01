@@ -5,13 +5,13 @@ using WebApi.Models;
 using WebApi.Repository;
 using Xunit;
 
-namespace Tests
+namespace Tests.Services
 {
-    public class BaseTests
+    public class BaseServiceTests
     {
         public SortPageModel ALL = new SortPageModel() { PageNumber = 1, PageSize = 999999, SortCol = "id", SortDesc = false };
 
-        public CustomDbContext CreateDbContext(bool skipSeed = false)
+        public CustomDbContext CreateFakeDbContext(bool skipSeed = false)
         {
             var options = new DbContextOptionsBuilder<CustomDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())

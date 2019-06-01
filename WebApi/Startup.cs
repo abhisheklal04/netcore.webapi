@@ -249,6 +249,7 @@ This can be done with a POST to " + @"/login with your app client ID.
             else
                 optionsBuilder.UseLoggerFactory(new LoggerFactory());
         }
+
         public class EFLoggerProvider : ILoggerProvider
         {
             public ILogger CreateLogger(string categoryName) { return new MyLogger(); }
@@ -276,6 +277,7 @@ This can be done with a POST to " + @"/login with your app client ID.
         {
             ConnectionString = connectionString;
         }
+
         public CustomDbContext(DbContextOptions options) : base(options) { }
     }
 
