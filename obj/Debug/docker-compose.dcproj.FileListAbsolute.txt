@@ -1,0 +1,1 @@
+C:\Code\netcore\netcore.webapi\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
