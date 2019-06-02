@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Tests.Integration
+namespace IntegrationTests
 {
     public class CustomWebApplicationFactory<TStartup>
     : WebApplicationFactory<TStartup> where TStartup : class
@@ -34,7 +34,7 @@ namespace Tests.Integration
                 // database for testing.
                 services.AddDbContext<CustomDbContext>(options =>
                 {
-                    options.UseInMemoryDatabase("InMemoryDbForTesting", InMemoryDatabaseRoot);
+                    options.UseInMemoryDatabase(Guid.NewGuid().ToString(), InMemoryDatabaseRoot);
                     options.UseInternalServiceProvider(serviceProvider);
                 });
 
@@ -52,6 +52,7 @@ namespace Tests.Integration
 
                     // Ensure the database is created.
                     db.Database.EnsureCreated();
+                    db.Database.EnsureDeleted();
 
                     try
                     {

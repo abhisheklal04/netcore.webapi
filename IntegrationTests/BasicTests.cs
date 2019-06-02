@@ -15,16 +15,16 @@ using System.Net.Http;
 using WebApi.Models.Response;
 using Newtonsoft.Json;
 
-namespace Tests.Integration
+namespace IntegrationTests
 {
-    public class IntegrationTests :
+    public class BasicTests :
         IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly HttpClient _client;
         private readonly CustomWebApplicationFactory<Startup>
             _factory;
 
-        public IntegrationTests(
+        public BasicTests(
             CustomWebApplicationFactory<Startup> factory)
         {
             _factory = factory;

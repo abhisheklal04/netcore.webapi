@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WebApi.Services;
 using WebApi;
 
-namespace Tests.Integration
+namespace IntegrationTests
 {
     public static class SeedTestDatabase
     {
