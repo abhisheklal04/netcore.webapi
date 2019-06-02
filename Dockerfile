@@ -3,7 +3,7 @@ WORKDIR /app
 
 # copy csproj and restore as distinct layers
 COPY *.sln .
-COPY WebApi/*.csproj WebApi/
+COPY CustomerApi/*.csproj CustomerApi/
 
 RUN dotnet restore
 
@@ -14,4 +14,4 @@ RUN dotnet publish -c Release -o /publish *.sln
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
 WORKDIR /app
 COPY --from=build /publish .
-ENTRYPOINT ["dotnet", "WebApi.dll"]
+ENTRYPOINT ["dotnet", "CustomerApi.dll"]
