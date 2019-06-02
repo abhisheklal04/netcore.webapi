@@ -4,6 +4,14 @@ namespace WebApi.Models
 {
     public class SortPageModel
     {
+        public SortPageModel()
+        {
+            PageNumber = 1;
+            PageSize = 1;
+            SortDesc = false;
+            SortCol = null;
+        }
+
         private int _pageNumber = 10;
         public int PageNumber
         {

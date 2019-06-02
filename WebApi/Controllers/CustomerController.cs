@@ -4,6 +4,7 @@ using WebApi.Models;
 using WebApi.Models.Request;
 using WebApi.Models.Response;
 using WebApi.Services;
+using WebApi.Services.Interface;
 
 namespace WebApi.Controllers
 {
@@ -11,10 +12,10 @@ namespace WebApi.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly CustomerService _service;
+        private readonly ICustomerService _service;
 
         public CustomerController(
-            CustomerService service
+            ICustomerService service
             )
         {
             _service = service;

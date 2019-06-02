@@ -5,10 +5,11 @@ using WebApi.Models.Response;
 using WebApi.Repository;
 using WebApi.Models;
 using WebApi.Common;
+using WebApi.Services.Interface;
 
 namespace WebApi.Services
 {
-    public class CustomerService
+    public class CustomerService : ICustomerService
     {
         private readonly CustomDbContext _dbContext;
 

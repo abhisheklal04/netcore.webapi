@@ -21,6 +21,7 @@ using WebApi.Common;
 using WebApi.Services;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Diagnostics;
+using WebApi.Services.Interface;
 
 namespace WebApi
 {
@@ -108,7 +109,7 @@ This can be done with a POST to " + @"/login with your app client ID.
             services.AddAutoMapper(typeof(Startup));
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-            services.AddTransient<CustomerService, CustomerService>();
+            services.AddTransient<ICustomerService, CustomerService>();
 
         }
 
