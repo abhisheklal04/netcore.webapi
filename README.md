@@ -28,3 +28,13 @@ This will run all integration tests:
 `dotnet test CustomerApi.IntegrationTests`
 
 
+Running Via Docker: run following commands.
+`Navigate to solution folder`
+
+`docker build -t CustomerApi .`
+
+`docker run --rm -it -p 5000:80 CustomerApi`
+
+
+
+

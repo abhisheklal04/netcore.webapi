@@ -6,7 +6,7 @@
     <ProjectGuid>076952ed-3a52-4619-8938-9db790c9f98c</ProjectGuid>
     <DockerLaunchBrowser>True</DockerLaunchBrowser>
     <DockerServiceUrl>http://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>webapi</DockerServiceName>
+    <DockerServiceName>CustomerApi</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.ci.build.yml" />
