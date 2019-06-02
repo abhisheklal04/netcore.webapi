@@ -212,10 +212,10 @@ This can be done with a POST to " + @"/login with your app client ID.
             else if (exception is UnauthorizedException) code = HttpStatusCode.Unauthorized;
             else if (exception is Exception) code = HttpStatusCode.BadRequest;
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine((exception.Source == nameof(webapi) ? "App Error - " : "Unhandled Error - ") + exception.GetType().Name + ": " + exception.Message);
-            _logger.LogError((exception.Source == nameof(webapi) ? "App Error - " : "Unhandled Error - ") + exception.GetType().Name + ": " + exception.Message);
+            Console.WriteLine((exception.Source == nameof(WebApi) ? "App Error - " : "Unhandled Error - ") + exception.GetType().Name + ": " + exception.Message);
+            _logger.LogError((exception.Source == nameof(WebApi) ? "App Error - " : "Unhandled Error - ") + exception.GetType().Name + ": " + exception.Message);
             Console.ResetColor();
-            if (exception.Source != nameof(webapi))
+            if (exception.Source != nameof(WebApi))
             {
                 // Exception was not one of ours.
                 // Do additional logging here.

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using WebApi;
 using Microsoft.Extensions.Logging;
 
-namespace webapi
+namespace WebApi
 {
     public class Program
     {

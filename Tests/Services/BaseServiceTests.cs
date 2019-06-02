@@ -4,12 +4,13 @@ using WebApi;
 using WebApi.Models;
 using WebApi.Repository;
 using Xunit;
+using System.Linq;
 
 namespace Tests.Services
 {
     public class BaseServiceTests
     {
-        public SortPageModel ALL = new SortPageModel() { PageNumber = 1, PageSize = 999999, SortCol = "id", SortDesc = false };
+        public SortPageModel SinglePageResult = new SortPageModel() { PageNumber = 1, PageSize = 999999, SortCol = "id", SortDesc = false };
 
         public CustomDbContext CreateFakeDbContext(bool skipSeed = false)
         {
@@ -18,6 +19,8 @@ namespace Tests.Services
                 .Options;
 
             var dbContext = new CustomDbContext(options);
+
+            dbContext.Database.EnsureDeleted();
 
             if (!skipSeed)
             {
@@ -54,11 +57,15 @@ namespace Tests.Services
                     IsArchived = false
                 });
 
-                dbContext.SaveChanges();
+
             }
-            
+
+            dbContext.SaveChanges();
 
             return dbContext;
         }
+
     }
+
+    
 }

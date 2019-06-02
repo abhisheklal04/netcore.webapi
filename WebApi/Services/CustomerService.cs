@@ -24,10 +24,19 @@ namespace WebApi.Services
             if (model == null)
                 throw new InvalidModelException("Model is invalid. Please check the swagger docs.");
             if (string.IsNullOrWhiteSpace(model.FirstName?.Trim()))
-                throw new RequiredFirstNameException("FirstName is required.");
+                throw new RequiredException("First Name is required.");
             if (string.IsNullOrWhiteSpace(model.FirstName?.Trim()))
-                throw new RequiredLastNameException("FirstName is required.");
-            
+                throw new RequiredException("First Name is required.");
+            if (model.FirstName?.Trim().Length > 50)
+                throw new MaxLengthException("Maximum length allowed for First Name is 50.");
+            if (model.LastName?.Trim().Length > 50)
+                throw new MaxLengthException("Maximum length allowed for Last Name is 50.");
+
+            var existingCustomer = _dbContext.Customers.SingleOrDefault(x => !x.IsArchived && x.FirstName == model.FirstName && x.LastName == model.LastName);
+
+            if (existingCustomer != null)
+                throw new CustomerExistsException("Customer with same first and last name already exists");
+
             var dbItem = new Customer();
 
             dbItem.Id = Guid.NewGuid();
@@ -54,7 +63,7 @@ namespace WebApi.Services
                 Id = dbItem.Id,
                 FirstName = dbItem.FirstName,
                 LastName = dbItem.LastName,
-                DateOfBirth = dbItem.DateOfBirth,                 
+                DateOfBirth = dbItem.DateOfBirth,
             };
         }
 
@@ -63,13 +72,23 @@ namespace WebApi.Services
             if (model == null)
                 throw new InvalidModelException("Model is invalid. Please check the swagger docs.");
             if (string.IsNullOrWhiteSpace(model.FirstName?.Trim()))
-                throw new RequiredFirstNameException("FirstName is required.");
+                throw new RequiredException("First Name is required.");
             if (string.IsNullOrWhiteSpace(model.FirstName?.Trim()))
-                throw new RequiredLastNameException("FirstName is required.");
+                throw new RequiredException("First Name is required.");
+            if (model.FirstName?.Trim().Length > 50)
+                throw new MaxLengthException("Maximum length allowed for First Name is 50.");
+            if (model.LastName?.Trim().Length > 50)
+                throw new MaxLengthException("Maximum length allowed for Last Name is 50.");
 
             var dbItem = _dbContext.Customers.SingleOrDefault(x => x.Id == id && !x.IsArchived);
             if (dbItem == null)
                 throw new NotFoundException("Customer not found.");
+
+            var existingCustomer = _dbContext.Customers
+                .SingleOrDefault(x => !x.IsArchived && x.Id != id && x.FirstName == model.FirstName && x.LastName == model.LastName);
+            
+            if (existingCustomer != null)
+                throw new CustomerExistsException("Customer with same first and last name already exists");
 
             dbItem.UpdatedDateTimeUtc = DateTime.UtcNow;
             dbItem.FirstName = model.FirstName;
@@ -142,7 +161,7 @@ namespace WebApi.Services
                 IsArchived = x.IsArchived,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
-                DateOfBirth = x.DateOfBirth,                
+                DateOfBirth = x.DateOfBirth,
             }).ToList();
 
             if (totalItems > 0 && items.Count == 0)
