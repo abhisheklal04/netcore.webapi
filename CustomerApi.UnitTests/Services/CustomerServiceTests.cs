@@ -282,6 +282,30 @@ namespace Tests.Services
         }
 
         [Fact]
+        public void Should_add_or_update_removed_customer_with_same_name()
+        {
+            using (var context = CreateFakeDbContext(skipSeed: true))
+            {
+                var service = new CustomerService(context);
+                var customer1 = new CustomerAddRequest()
+                {
+                    FirstName = "John",
+                    LastName = "Smith",
+                    DateOfBirth = DateTime.Now
+                };
+
+                var AddedCustomer1 = service.Add(customer1);
+                service.Remove(AddedCustomer1.Id);
+
+                var AddedCustomer2 = service.Add(customer1);
+
+                Assert.NotEqual(AddedCustomer1.Id, AddedCustomer2.Id);                
+                Assert.Equal(AddedCustomer1.FirstName, AddedCustomer2.FirstName);                
+                Assert.Equal(AddedCustomer1.LastName, AddedCustomer2.LastName);                
+            }
+        }
+
+        [Fact]
         public void Should_not_add_update_a_customer_without_firstname_and_lastname()
         {
             using (var context = CreateFakeDbContext(skipSeed: true))
