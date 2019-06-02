@@ -3,10 +3,11 @@ using System;
 using WebApi.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using WebApi.Services;
+using WebApi;
 
-namespace WebApi
+namespace Tests.Integration
 {
-    public static class SeedDatabase
+    public static class SeedTestDatabase
     {
         public static void Run(IServiceProvider serviceProvider, IConfiguration config)
         {

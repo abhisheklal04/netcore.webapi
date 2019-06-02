@@ -30,12 +30,13 @@ namespace WebApi.Controllers
             , CustomerListItemResponseSortCol sortCol = CustomerListItemResponseSortCol.Id
             , bool sortDesc = false)
         {
-            return _service.GetPaged(
+            var result = _service.GetPaged(
                 sortPage: new SortPageModel { PageNumber = pageNumber, PageSize = pageSize, SortDesc = sortDesc }
                 , sortCol: sortCol
                 , keyword: keyword
                 , isArchived: isArchived
                 );
+            return result;
         }
 
         [HttpGet]
