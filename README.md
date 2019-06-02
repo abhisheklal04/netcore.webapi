@@ -17,6 +17,12 @@
 ### Install Instructions
 Fork or Download the repository
 
+Install Visual studio 2017 community edition
+Install .Net Core 2.2.0
+
+Run Via visual studio or use command line instructions below. 
+
+
 Navigate to the `CustomerApi` directory under the cloned repository from above and run command:
 `dotnet run`
 
