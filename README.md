@@ -6,18 +6,23 @@
 * On deleting customer , new customer can be added with same first name and last name other wise api doesn't allow customers with same firstname and lastname. 
 * Paged search of Customers based on partial first name, last name, and Customer Id Guid
 * Sorting of the results based columns Id, First Name, Last Name,  
-* Unit for Controllers, Services and Repository using Inmemory Database
+* Swaager for live running and demo
+* Unit testsfor Controllers, Services and Repository using Inmemory Database
 * Integration tests to check the working endpoints. 
 * Curl request logging
 * Exception handling and logging via middleware based on each request type 
 
-#### Tools/Techniques: .NetCore 2.2, C#, XUnit   
+#### Tools/Techniques: .NetCore 2.2, C#, XUnit, SwaggerUI
 
 ### Install Instructions
 Fork or Download the repository
 
 Navigate to the `CustomerApi` directory under the cloned repository from above and run command:
 `dotnet run`
+
+Access Api using url.
+`http://localhost:5001/swagger/index.html`
+
 
 This will run all unit tests from root directory:
 `dotnet test CustomerApi.UnitTests`
