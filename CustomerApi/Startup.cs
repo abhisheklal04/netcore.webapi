@@ -92,12 +92,10 @@ namespace CustomerApi
                     {
                         Title = "My API",
                         Version = "v1",
-                        Description = @"You must authenticate with login endpoint before calling these endpoints.
-This can be done with a POST to " + @"/login with your app client ID.
-
-401 - Not authenticated or role does not have permission to perform this action.
+                        Description = @"
+Customer CRUD API
 404 - Item by ID is not found or endpoint URL is wrong.
-400 - Validation error. Example JSON response body: { ""type"": ""TitleTooLongException"", message: ""Title must be less than 50 characters."" }
+400 - Bad Request or Validation error. Example JSON response body: { ""type"": ""NameTooLongException"", message: ""Title must be less than 50 characters."" }
 500 - Unknown server error.
 ",
                     });
