@@ -1,5 +1,5 @@
 # Sample NetCore WebApi
-`Demonstrating`
+`Demonstrating Microservice style Api design and basic CRUD functionality`
 * Customer [FirstName, LastName, DateOfBirth, IsArchived, CreatedOnDate, UpdatedOnDate] CRUD functionality using InMemory Database
 * FirstName and Last name are required for creating a customer with date of birth can be updated later.
 * Deleted customers are marked as archived and can be viewed in customers list when IsArchived flag is set to true.
